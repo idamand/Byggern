@@ -13,6 +13,7 @@
 #include "sram.h"
 #include "usart.h"
 #include "adc_driver.h"
+#include "oled_driver.h"
 
 #define FOSC 4915200 //1843200 //Clock speed
 #define BAUD 9600
@@ -34,18 +35,18 @@ int main(void){
 	SFIOR &= ~(1<<XMM1); // release top ports of adress space for jtag (pc4-pc7)
 	SFIOR &= ~(1<<XMM0); // release top ports of adress space for jtag (pc4-pc7)
 	
-	adc_setup();
+	//adc_setup();
 	
-
-	//SRAM_test();
+    oled_init();
+	SRAM_test();
 	
 	for (int i = 0; i<30; i++)
 	{
 		printf("in for loop\r\n");
         //print_joystick_pos();
-        print_joystick_dir();
-        print_all_adc_channels();
-        button_read();
+        //print_joystick_dir();
+      //  print_all_adc_channels();
+        //button_read();
 	}
 	
 	
