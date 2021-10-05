@@ -10,6 +10,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "sram.h"
 #include "usart.h"
 #include "adc_driver.h"
@@ -35,22 +36,25 @@ int main(void){
 	SFIOR &= ~(1<<XMM1); // release top ports of adress space for jtag (pc4-pc7)
 	SFIOR &= ~(1<<XMM0); // release top ports of adress space for jtag (pc4-pc7)
 	
-	//adc_setup();
+	adc_setup();
 	
     oled_init();
-	SRAM_test();
+	//SRAM_test(true);
+	//test_fonts_with_rsa('!');
+	
+
 	
 	for (int i = 0; i<30; i++)
 	{
-		printf("in for loop\r\n");
+		//printf("in for loop\r\n");
         //print_joystick_pos();
         //print_joystick_dir();
       //  print_all_adc_channels();
-        //button_read();
+        //button_read(); //uncomenting this soimetimes makes the program constantly reset 
 	}
 	
-	
 	printf("program finished\r\n");
+	
 	return 0;
 }
 

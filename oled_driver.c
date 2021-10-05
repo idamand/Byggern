@@ -6,34 +6,78 @@
  */ 
 
 #include <avr/pgmspace.h>
-//#include "fonts.h"
-//we have the fonts in fonts.h
+#include <util/delay.h>
+#include "fonts.h" //we have the fonts in fonts.h
+#include "oled_driver.h"
 
-volatile char *ext_ram_oled = (char *)0x1000; // Start address for the OLED
+#define OLED_ADRESS_CTRL 0x1000
+
+volatile char *ext_ram_oled = (char *)OLED_ADRESS_CTRL; // Start address for the OLED
+volatile char *ext_ram_oled_data = (char *)0x1200; // Start address for the OLED
 //1200 - 10 bit
+
+//menu
+
+//choose level
+// -> 1,2,3,4 
+// close game
+// letter menu
+// -> a,b,c,d
+
 
 
 //write command to oled
 void write_c(uint8_t command){
+	_delay_ms(1);
+	
     ext_ram_oled[0] = command; //zero because we use address as control
     //printf("command to oled: %4d\r\n", command );
 }
 
 //write data to oled
 void write_d(uint8_t data_to_write){
-    volatile char *ext_ram_dummy = (char *)0x1200; // Start address for the OLED
-    ext_ram_dummy[0] = data_to_write; //one because we use address as control
+    ext_ram_oled_data[0] = data_to_write; //one because we use address as control
 }
 
+//helper function for test_fonts_with_rsa
+void print_int_as_bits(uint8_t int_to_print){
+	char buf1[8]; // ={'0','0','0','0','0','0','0','0'};
+	itoa(int_to_print, buf1,2);
+	printf("%s",buf1);
+}
 
-
+//this writes zeroes and ones to putty in the same way as data would be written to oled
+// in order to make this into an oled print function the only thing that would need to be changed is
+// print_int_as_bits -> write_d
+void test_fonts_with_rsa(unsigned char test_char){
+	printf("char selection test running\r\n");
+	printf("index input to test function: %4d \r\n", test_char);
+	printf("using font8\r\n");
+	
+	int font_array_outer_index = test_char-32; // the fonts[0] corresponds to char 32. 
+	
+	for(int i=0; i<8; i++){
+		uint8_t fontval = pgm_read_byte(&(font8[font_array_outer_index][i]));
+		print_int_as_bits(fontval);
+		printf("\r\n");
+	}
+	
+	
+	
+	/*
+	int font_index = test_char;
+	printf("font_index: %4d \r\n", font_index);
+	
+	for(int i= 0; i<8; ++i){
+		
+	}
+	*/
+}
 
 //suggested in p.15 of oled-ly-190
 void oled_init() {
-    printf("initializing data");
-   // while(1){     
-        write_c(0xae); // display off
-   // }
+    printf("initializing OLED");
+    write_c(0xae); // display off
     write_c(0xa1); //segment remap
     write_c(0xda); //common pads hardware: alternative
     write_c(0x12);
@@ -55,7 +99,27 @@ void oled_init() {
     write_c(0xa4); //out follows RAM content
     write_c(0xa6); //set normal display
     write_c(0xaf);  // display on
-    write_c(0xa5); // will light up the screen
+    
+	write_c(0xa5); // will light up the screen
+	printf("OLED init finished");
+	
+}
+
+// might be necessary with separate function for the commands that require arguments
+void execute_oled_command(Oled_command command_to_execute){
+	switch(command_to_execute){
+		case RESET:
+			//write_c(0xsomething) // add in relevant command
+			//write_c(0xsomething) //A (in datasheet)
+			break;
+		case LIGHT_UP_SCREEEN:
+			write_c(0xa5); // will light up the screen
+			break;
+		case  CLEAR:
+			//write_c(0xsomething) // add in relevant command
+			break;
+	}
+	//{RESET, LIGHT_UP_SCREEEN, CLEAR}
 }
 
 /*

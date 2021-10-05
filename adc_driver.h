@@ -6,8 +6,11 @@
  */ 
 
 
+
 #ifndef ADC_DRIVER_H_
 #define ADC_DRIVER_H_
+
+
 
 typedef enum Direction {LEFT, RIGHT, UP, DOWN, NEUTRAL} Direction;
 
