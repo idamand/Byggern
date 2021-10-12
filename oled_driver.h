@@ -9,11 +9,16 @@
 #ifndef OLED_DRIVER_H_
 #define OLED_DRIVER_H_
 
-typedef enum Oled_command {RESET, LIGHT_UP_SCREEEN, CLEAR} Oled_command;
 
 void oled_init();
-void test_fonts_with_rsa(unsigned char test_char);
-void print_int_as_bits(uint8_t int_to_print);
-void execute_oled_command(Oled_command command_to_execute);
+void oled_print_char(char* in_char);
+
+//writes a lot of zeroes to oled data memory
+void oled_invert_display(); 
+void oled_goto_line(uint8_t line);
+void oled_goto_column(uint8_t column);
+
+void oled_newline();
+void oled_clear_screen();
 
 #endif /* OLED_DRIVER_H_ */

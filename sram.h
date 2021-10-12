@@ -10,7 +10,7 @@
 #define SRAM_H_
 
 
-void SRAM_test(); //bool short_write = false); // if short wrrite is true donnt test the entire memory area (just for less writing in putty)s
+void SRAM_test(void);
 
 
 

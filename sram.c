@@ -5,13 +5,10 @@
  *  Author: idamand
  */ 
 #include <avr/io.h>
-#include <stdbool.h>
 
-void SRAM_test()//bool short_write)
+void SRAM_test(void)
 {
-	//uint16_t ext_ram_size = 0x800; //ram size for sram 
-	uint16_t ext_ram_size = 0x100; //JUST TO HAVE LESS OUTPUT TO THE SCREEN, TODO: CHANGE BACK
-	
+	uint16_t ext_ram_size = 0x800; //ram size for sram 
 	volatile char *ext_ram = (char *)0x1800; // Start address for the SRAM 
 	
 	uint16_t write_errors = 0;
@@ -26,14 +23,7 @@ void SRAM_test()//bool short_write)
 	
 	// Write phase: Immediately check that the correct value was stored
 	srand(seed);
-	
-	//just to have posssibility of less output during a ram test we expect to crash
-	uint16_t loop_len = ext_ram_size;
-	//if(short_write){
-		//loop_len = 500;
-	//}
-	
-	for (uint16_t i = 0; i < loop_len; i++) {
+	for (uint16_t i = 0; i < ext_ram_size; i++) {
 		uint8_t some_value = rand();
 		ext_ram[i] = some_value;
 		uint8_t retreived_value = ext_ram[i];
@@ -42,9 +32,6 @@ void SRAM_test()//bool short_write)
 			write_errors++;
 		}
 	}
-	
-
-
 	
 	// Retrieval phase: Check that no values were changed during or after the write phase
 	srand(seed);

@@ -134,19 +134,19 @@ Direction adc_joystick_direction(){
 
 void print_joystick_dir(void){
     if(adc_joystick_direction() == NEUTRAL){
-            printf("Neutral\r\n");
+            printf("Neutral");
         }
         else if(adc_joystick_direction() == DOWN){
-            printf("Down\r\n");
+            printf("Down");
         }
         else if(adc_joystick_direction() == UP){
-             printf("Up\r\n");
+             printf("Up");
         }
         else if(adc_joystick_direction() == RIGHT){
-            printf("Right\r\n");
+            printf("Right");
         }
         else if(adc_joystick_direction() == LEFT){
-            printf("Left\r\n");
+            printf("Left");
         }
 }
 
@@ -158,13 +158,22 @@ void print_joystick_pos(void){
     printf("y joystick degrees float: %4d E-2 \r\n", y_angle);
 }
 
-void button_read(){
+int button_read(int button_num){
     
     //set direction as input
     DDRB &= ~(1<<PB0);
     DDRB &= ~(1<<PB1);
     
     //print the value from pb 0
-    printf("left button val: %4d \r\n", PINB & (1<<PB0));
-    printf("right button val: %4d \r\n", (PINB & (1<<PB1)) >> 1 ); // the last bitshift is just for the int to be 1 rather than 2 when the button is pressed.
+	if(button_num == 0){
+		//left button
+		return PINB & (1<<PB0);
+	}
+	if(button_num == 1){
+		//left button
+		return ((PINB & (1<<PB1)) >> 1 );
+	}
+	
+    //printf("left button val: %4d \r\n", PINB & (1<<PB0));
+    //printf("right button val: %4d \r\n", (PINB & (1<<PB1)) >> 1 ); // the last bitshift is just for the int to be 1 rather than 2 when the button is pressed.
 }

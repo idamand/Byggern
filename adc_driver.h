@@ -6,11 +6,8 @@
  */ 
 
 
-
 #ifndef ADC_DRIVER_H_
 #define ADC_DRIVER_H_
-
-
 
 typedef enum Direction {LEFT, RIGHT, UP, DOWN, NEUTRAL} Direction;
 
@@ -26,10 +23,11 @@ int adc_joytsick_position(int coord_num);
 //int adc_slider_val_left(){return adc_read(0);}
 //int adc_slider_val_right(){return adc_read(1);}
 
-Direction get_joystick_direction();
+Direction adc_joystick_direction(); //get_joystick_direction();
 void print_joystick_dir(void);
 void print_joystick_pos(void);
 void print_all_adc_channels(void); 
 
-void button_read();
+int button_read(int button_num); // button num 0-> left, 1 -> right 
+
 #endif /* ADC_DRIVER_H_ */
