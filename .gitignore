@@ -1,0 +1,5 @@
+**/Debug
+*.log
+*.xml
+*.cproj
+.DS_Store
