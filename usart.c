@@ -24,7 +24,10 @@ void USART_TRANSMIT(unsigned char data){
 	while(!(UCSR0A & (1<<UDRE0))  ) //note:UCSR0A OR 1A?
 	;
 	
+
+	// transmit the data
 	UDR0 = data;
+
 }
 
 unsigned char USART_Receive( void)

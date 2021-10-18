@@ -142,7 +142,34 @@
     <Compile Include="adc_driver.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="fonts.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mcp2515_driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mcp2515_driver.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="menu_oled.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="menu_oled.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="oled_driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="oled_driver.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="spi_driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="spi_driver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="sram.c">

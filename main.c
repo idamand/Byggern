@@ -28,7 +28,7 @@ int main(void){
 
 	//initialize uart and check that communication works	
 	USART_Init(MYUBRR); 
-	//fdevopen(USART_TRANSMIT,USART_Receive);
+	fdevopen(USART_TRANSMIT,USART_Receive);
 	
 	
 	
@@ -44,31 +44,70 @@ int main(void){
 	
 	
     oled_init();
-	fdevopen(oled_print_char,USART_Receive);
+	//fdevopen(oled_print_char,USART_Receive);
 	
 	oled_clear_screen(); 
 	printf("program started"); oled_newline(); 
 	
 	SPI_MasterInit();
+	//mcp2515_reset();
 	
+	uint8_t can_ctrl_reg_addr = 0x0f;
+	uint8_t can_ctrl_content =  mcp2515_read(can_ctrl_reg_addr);
+	printf("the initial content of canctrl is %4d: \r\n", can_ctrl_content);
+
+	mcp2515_set_loopback_mode();
+
+	
+	printf("doing test of loading bufs");
+	mcp2515_load_tx_buffer(0x05); // just arbitrary number
+	uint8_t recieved1 = mcp2515_read_rx_buffer();
+	printf("reading rx buffer yields: %4d: \r\n", recieved1);
+
+	printf("program finished"); oled_newline();
+
+
+	/*
+	uint8_t spi_recieved_bit = 5;	//5 is just arbitrary start value
 	for (int i = 0; i<15; i++)
 	{
+		for (int j = 0; j<1000; j++){
+			SPI_MasterTransmit(0x05);
+			SPI_MasterTransmit(0x06);
+			SPI_MasterTransmit(0x07);
+			SPI_MasterTransmit(0x11);
+		}
 		SPI_MasterTransmit(0x05);
 		SPI_MasterTransmit(0x06);
-		
-		SPI_MasterTransmit(0x07);
-		SPI_MasterTransmit(0x07);
-		SPI_MasterTransmit(0x07);
-		
-		
-		SPI_MasterTransmit(0x11);
-		SPI_MasterTransmit(0x11);
-		SPI_MasterTransmit(0x11);
-		SPI_MasterTransmit(0x11);
-		SPI_MasterTransmit(0x11);
-		
-	}
+		spi_recieved_bit = SPI_MasterRead();
+		printf("received:"); 
+		printf(": %4d", spi_recieved_bit); 
+		oled_newline();
+
 	
+		SPI_MasterTransmit(0x07);
+		
+		SPI_MasterTransmit(0x07);
+		
+		SPI_MasterTransmit(0x07);
+		
+
+	
+		SPI_MasterTransmit(0x11);
+		
+
+		
+		SPI_MasterTransmit(0x11);
+		
+		SPI_MasterTransmit(0x11);
+		
+		SPI_MasterTransmit(0x11);
+		
+		SPI_MasterTransmit(0x11);
+		
+		
+
+	} */
 	//update_current_menu(); //needs to be called in beginning as well to have menu initialize 
 	
 	//oled_write_menu_to_screen();
@@ -98,7 +137,7 @@ int main(void){
 	}
 	
 	*/
-	printf("program finished"); oled_newline(); 
+	
 	return 0;
 }
 
