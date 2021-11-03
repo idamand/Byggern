@@ -18,6 +18,7 @@ uint8_t mcp_read(uint8_t adress); // to read a register
 void mcp_write(uint8_t adress, uint8_t data); // to write to a register
 void mcp_reset();
 void mcp_set_loopback_mode();
+void mcp_set_normal_mode();
 void mcp_load_tx_buffer(uint8_t data); // todo: can be extended so that we can choose which tx buffer to load 
 uint8_t mcp_read_rx_buffer();
 void mcp_bit_modify(uint8_t adress, uint8_t mask, uint8_t data);

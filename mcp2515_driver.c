@@ -20,7 +20,6 @@ void mcp_init(){
 	//set interrupt for all buffers
 	mcp_bit_modify(MCP_CANINTE, 0b11100000, 0b01000000);
 		
-	mcp_set_loopback_mode();
 }
 
 void mcp_slave_select(){
@@ -118,4 +117,25 @@ void mcp_set_loopback_mode(){
 	else{
 		printf("setting loopback mode failed\r\n");
 	}
-}
+} 
+
+void mcp_set_normal_mode(){
+	 //can_ctrl_reg 0xfh, REQP (bit 7-5 of can ctrl reg, 5 is lsb)
+	//uint8_t can_ctrl_reg_addr = 0x0f;
+	
+	printf("in setting normal mode\r\n");
+	
+	mcp_bit_modify(MCP_CANCTRL, 0b11100000, 0b00000000); //Set normal mode (0 is normal mode)
+	
+	// read canstat.opmode
+	// opmode is bit 7-5 
+	uint8_t canstat =  mcp_read(MCP_CANSTAT);
+	uint8_t opmode = canstat >> 5; // the bitshift is in order to only see the uppermost three bits
+
+	if(opmode == 0){ // 0 corresponds to normal mode
+		printf("sucessfully set CAN normal mode\r\n");
+	}
+	else{
+		printf("setting CAN normal mode failed\r\n");
+	}
+} 

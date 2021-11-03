@@ -17,6 +17,7 @@
 #include "menu_oled.h"
 #include "spi_driver.h"
 #include "CAN.h"
+#include "mcp2515_driver.h"
 
 #define FOSC 4915200 //1843200 //Clock speed
 #define BAUD 9600
@@ -63,15 +64,27 @@ int main(void){
 	can_test_msg.IDH = 0b1111111;
 	can_test_msg.IDL = 0b00000111; // 3 lowest bits are part of 11 bit ID
 	can_test_msg.length = 0x06;
-	can_test_msg.data[0] = 0x01; can_test_msg.data[1] = 0x02; can_test_msg.data[2] = 0x05;
+	can_test_msg.data[0] = 0x03; can_test_msg.data[1] = 0x02; can_test_msg.data[2] = 0x01;
 	
 	
+	
+	for (int i=0; i<600; i++)
+	{
+		CAN_send(can_test_msg, 0x01);
+	}
 	
 	CAN_send(can_test_msg, 0x01); // to send to t1
 	struct CANmessage can_test_recieve = CAN_receive(0x01); // to recieve from to r0
 	printf("can test recieve r0 is: %4d, %4d, %4d\r\n", can_test_recieve.data[0], can_test_recieve.data[1], can_test_recieve.data[2]);
 	struct CANmessage can_test_recieve_r1 = CAN_receive(0b00000010); // to recieve from to r1
 	printf("can test recieve r1 is: %4d, %4d, %4d\r\n", can_test_recieve_r1.data[0], can_test_recieve_r1.data[1], can_test_recieve_r1.data[2]);	
+	
+	can_test_msg.data[0] = 0x09; can_test_msg.data[1] = 0x08; can_test_msg.data[2] = 0x07;
+	CAN_send(can_test_msg, 0x01); // to send to t1
+	can_test_recieve = CAN_receive(0x01); // to recieve from to r0
+	printf("can test recieve r0 is: %4d, %4d, %4d\r\n", can_test_recieve.data[0], can_test_recieve.data[1], can_test_recieve.data[2]);
+	can_test_recieve_r1 = CAN_receive(0b00000010); // to recieve from to r1
+	printf("can test recieve r1 is: %4d, %4d, %4d\r\n", can_test_recieve_r1.data[0], can_test_recieve_r1.data[1], can_test_recieve_r1.data[2]);
 
 /*
 	

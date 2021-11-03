@@ -6,20 +6,23 @@
  */ 
 #include "CAN.h"
 #include "mcp2515_driver.h"
+#include <util/delay.h>
 	
 void CAN_init(void){
 	
 	mcp_init();
+	
+	/* currently moved to mcp_init
 	mcp_bit_modify(MCP_TXB0CTRL, 0b00000011, 0b00000000); //Set T0 to lowest priority
 	mcp_bit_modify(MCP_TXB1CTRL, 0b00000011, 0b00000010); //Set T1 to intermediate priority
 	mcp_bit_modify(MCP_TXB2CTRL, 0b00000011, 0b00000011); //Set T2 to highest priority
 	mcp_bit_modify(MCP_CANINTE,  0b00011100, 0b00011111); //Set the interrupt for all buffers
-	
-	mcp_set_loopback_mode();
-
+	*/
+	mcp_set_normal_mode();
 }
 
 void CAN_send(struct CANmessage message, uint8_t buffer){ //Buffer type is 0bxxxxxnnn with 100 T2, 010 T1 and 001 T0
+	printf("CAN_send called for: %4d, %4d, %4d ", message.data[0], message.data[1], message.data[2]);
 	
 	uint8_t start_adr;
 	uint8_t int_mask;
@@ -47,8 +50,8 @@ void CAN_send(struct CANmessage message, uint8_t buffer){ //Buffer type is 0bxxx
 		mcp_bit_modify(adr, 0b11111111, message.data[i]);
 	}
 	
-	//mcp_bit_modify(MCP_TXB0CTRL, 0b00001000, 0b00001000);
-	//printf("txb0ctrl before rts is %4d\r\n", mcp_read(MCP_TXB0CTRL));
+	mcp_bit_modify(MCP_TXB0CTRL, 0b00001000, 0b00001000);
+	printf("txb0ctrl before rts is %4d\r\n", mcp_read(MCP_TXB0CTRL));
 	
 	mcp_request_to_send(buffer); //Request to send to selected buffer
 	printf("can send waiting for interrupt\n");
@@ -56,20 +59,32 @@ void CAN_send(struct CANmessage message, uint8_t buffer){ //Buffer type is 0bxxx
 	uint8_t interrupt = mcp_read(MCP_CANINTF);
 	printf("canintf is %4d\r\n", interrupt);
 	printf("caninte is %4d\r\n", mcp_read(MCP_CANINTE));
-	printf("txb0ctrl after rts is %4d\r\n", mcp_read(MCP_TXB0CTRL));
 	
+	if( mcp_read(MCP_TXB0CTRL) == 0){
+		printf("txb0ctrl waqs cleared after can transmission, sucessful completion.\r\n");
+	}
+	else{
+		printf("txb0ctrl was cleared after can transmission, UNsucessful completion.\r\n");
+	}
+	
+	//manually clear canintf to reset interrupt condition
+	printf("clearing canint");
+	mcp_write(MCP_CANINTF, 0x00);
 	
 	/*
 	while(!( (interrupt  & int_mask) == int_mask))
 	;
 	mcp_bit_modify(MCP_CANINTF, int_mask, 0b00000000);
 	*/
-	printf("can send received interrupt\n");
+	
+	printf("can send skipped interrupt\n");
 }
 
 struct CANmessage CAN_receive(uint8_t buffer){ //Receive buffer of type 0bxxxxxxnn with nn=01 for R0 and nn=10 for R1
 	struct CANmessage received;
 	printf("can receive waiting for interrupt\n");
+	_delay_ms(1000);
+	
 	printf("skipping waiting for interrupt (tempporary)\r\n");
 	/*
 	uint8_t interrupt = mcp_read(MCP_CANINTF);
@@ -95,7 +110,7 @@ struct CANmessage CAN_receive(uint8_t buffer){ //Receive buffer of type 0bxxxxxx
 	for(int i=0; i < 8; i++){
 		int adr = start_adr+i;
 		received.data[i] = mcp_read(adr);
-		printf("%u\r\n", received.data[i]);
+		//printf("%u\r\n", received.data[i]);
 	}
 	
 	return received;
