@@ -18,5 +18,7 @@ void CAN_init(void);
 void CAN_send(struct CANmessage message, uint8_t buffer);
 void CAN_test(void);
 struct CANmessage CAN_receive(uint8_t buffer);
+int can_loopback_selftest();
+
 
 #endif /* CAN_H_ */

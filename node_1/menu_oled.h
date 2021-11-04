@@ -7,7 +7,8 @@
 
  
 #ifndef MENU_OLED_H_
-#define MENU_OLED_H_
+#define MENU_OLED_H_ 
+
 
 //this is the most important function, it will both update the menu and write it to screen (or putty in first iteration)
 void update_current_menu();

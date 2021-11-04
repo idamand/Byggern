@@ -13,7 +13,7 @@
 #include "can_controller.h"
 #include "can_interrupt.h"
 #include "system_sam3xa.h"
- 
+#include "Led.h" 
  
  
  // a shitty delay fuinction copied from a forum.
@@ -49,48 +49,24 @@ int main(void)
 	
 	// remember to clear wpen bit in pio write protect mode register
 	//luckily it seems to be disabled because we can turn led on and off
-	
-	PIOA ->PIO_PER = PIO_PA19; // enable pin as output
-	PIOA -> PIO_OER = PIO_PA19; // set as output
-	PIOA -> PIO_PUDR = PIO_PA19;
-	
+    
 	WDT -> WDT_MR = WDT_MR_WDDIS;
-	
-	//for delay 
-	//SysTick -> CTRL |= 1; // 1st bit is enable. p.193 
+	//SysTick -> CTRL |= 1; // 1st bit is enable. p.193 //for delay, however it does not work well enough
 	
 	configure_uart();    
-
-	PIOA -> PIO_SODR = PIO_PA19; // turn led high 
-	PIOA -> PIO_CODR = PIO_PA19; // turn led low
+    
 	printf("Hello guys!\n\r");
 	pwm_init();
-	
 	adc_init();
-	
-	printf("adc starting");
-	int tempval1 = 0;
-	
-	for (int i=0; i<900; i++)
-	{
-		printf("ab %4d: \n\r", adc_get_val());
-		
-		if(adc_get_val()< 100){
-			printf("BALL DETECTED!"); 
-		
-		}
-		//sysTickDelay2(1);
-		//adc_get_val();
-		//printf("val: %4d",tempval1);
-		
-	}
-	
-	printf("adc finished");
-	
-	
-	
-	/*
-	can_init_def_tx_rx_mb(0x29457);
+    Led_init();
+    
+    Led_blink_once_quickly();
+	//adc_print_whether_ball_detected();
+    //pwm_test_a_few_angles();    
+
+   // beginning of can experimentation ----------------------------------------------------------------------------------------------------------- 
+   
+	can_init_def_tx_rx_mb(0x290457); //(0x00140561); //
 	
 	CAN_MESSAGE reception_message; 
 	reception_message.id = 79; //just a random arbitrary number.
@@ -98,32 +74,25 @@ int main(void)
 		
 	//CAN0_Handler(); // denne skal ikke kalles, den blir aktivert av en interrupt. // this is where we should clear shit (inside this function) 
 	
+    printf("before calling can recieve");
 	can_receive(&reception_message,reception_mailbox_id);
+    printf("after calling can recieve");
 	
 	//for (int i = 0; i<3; i++)
 	//{
 		if(!can_receive(&reception_message,reception_mailbox_id)){ //it returns 0-> sucess, 1-> faliure
-			printf("recieved sucessfully");
+			printf("recieved sucessfully\n\r");
 		}
 		else{
-			printf("reception failed");
+			printf("reception failed\n\r");
 		}
-	//}
+	
 	
 	printf("reception message ID: %4d", reception_message.id);
-	printf("reception message data[0] is: %4d", reception_message.data[0]);
-	*/
+	printf("reception message data[1] is: %4d", reception_message.data[1]);
 	
-	/*
-	printf("setting to 90 deg");
-	pwm_set_angle(90);
-
-	printf("setting to 180 deg");
-	pwm_set_angle(180);
-
-	printf("setting to 0 deg");
-	pwm_set_angle(0);
-	*/
+    // end of can experimentation -----------------------------------------------------------------------------------------------------------
+	
 	printf("end of program");
 	
 }

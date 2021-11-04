@@ -11,7 +11,7 @@
 
 
 void SRAM_test(void);
-
+void sram_setup();
 
 
 

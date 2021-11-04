@@ -169,6 +169,7 @@ uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t tx_mb_id)
  */
 uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
 {
+    /* this block is just garbage we added 
 	//Check that mailbox is ready
 	if(! (CAN0->CAN_MB[rx_mb_id].CAN_MSR & CAN_MSR_MRDY) ){
 		printf("can_msr evaluate false");
@@ -193,6 +194,7 @@ uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
 	
 	//mrdy is cleared by writing mtcr or macr to can mcrx register.  
 	
+    */ 
 	if(CAN0->CAN_MB[rx_mb_id].CAN_MSR & CAN_MSR_MRDY)
 	{
 		//Get data from CAN mailbox

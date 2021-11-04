@@ -30,3 +30,22 @@ int adc_get_val(){
 	//printf("sample value is %4d\n\r", sample_value);
 	return sample_value; 
 }
+void adc_print_whether_ball_detected(){
+    printf("ball checking started\n\r");
+	
+	for (int i=0; i<900; i++)
+	{
+        if(adc_get_val()< 100){
+			printf("BALL DETECTED!"); 
+		
+		}
+        
+		printf("val %4d: \n\r", adc_get_val());
+        
+		//sysTickDelay2(1);
+		
+	}
+    
+	
+	printf("ball checking finished\n\r");
+}

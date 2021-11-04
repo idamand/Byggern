@@ -11,7 +11,7 @@
 
 
 void pwm_init();
-
 void pwm_set_angle(int deg);
+void pwm_test_a_few_angles();
 
 #endif /* PWM_DRIVER_H_ */

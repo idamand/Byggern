@@ -6,8 +6,10 @@
  */ 
 
 #include <avr/pgmspace.h>
-#include "fonts.h"
-//we have the fonts in fonts.h
+#include "fonts.h" //we have the fonts in fonts.h
+#include "oled_driver.h"
+
+//#include "usart.h" 
 
 volatile char *oled_command_addr = (char *)0x1000; // Start address for the OLED
 volatile char *oled_data_addr = (char *)0x1200; // Start address for the OLED
@@ -60,11 +62,10 @@ void oled_init() {
 
 
 void oled_print_char(char* in_char){
-	
 	/*if (in_char == 10){ //newline
 		oled_newline();
 	}
-	else{*/
+	else{*/ 
 		
 	int font_index = in_char - 32;
 	
@@ -96,14 +97,20 @@ void oled_invert_display(){
 }
 
 void oled_newline(){
-	if (oled_cursor_line<7)
-	{
-		oled_goto_line(oled_cursor_line+1);
-	}
-	else{
-		oled_goto_line(0);
-	}
-	oled_goto_column(0);
+    if (USE_OLED_FOR_PRINTF)
+    {
+	    if (oled_cursor_line<7)
+	    {
+		    oled_goto_line(oled_cursor_line+1);
+	    }
+	    else{
+		    oled_goto_line(0);
+	    }
+	    oled_goto_column(0);
+    }
+    else {
+        printf("\n\r");
+    }
 }
 
 void oled_goto_line(uint8_t line){

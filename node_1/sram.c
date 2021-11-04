@@ -6,6 +6,15 @@
  */ 
 #include <avr/io.h>
 
+void sram_setup(){
+	// do setup for the external adress interface
+	DDRC |= (1<<PC3); //force the MSB of the adress bus to be a write pin 
+	MCUCR |= (1<<SRE); // enable external adress memory interface
+	SFIOR |= (1<<XMM2); // release top ports of adress space for jtag (pc4-pc7)
+	SFIOR &= ~(1<<XMM1); // release top ports of adress space for jtag (pc4-pc7)
+	SFIOR &= ~(1<<XMM0); // release top ports of adress space for jtag (pc4-pc7)
+}
+
 void SRAM_test(void)
 {
 	uint16_t ext_ram_size = 0x800; //ram size for sram 

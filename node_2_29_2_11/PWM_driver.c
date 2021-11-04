@@ -60,3 +60,14 @@ void pwm_set_angle(int deg){
 	PWM -> PWM_CH_NUM[6].PWM_CDTY = CDTY_value;
 		
 }
+
+void pwm_test_a_few_angles(){
+    printf("setting to 90 deg");
+	pwm_set_angle(90);
+
+	printf("setting to 180 deg");
+	pwm_set_angle(180);
+
+	printf("setting to 0 deg");
+	pwm_set_angle(0);
+}

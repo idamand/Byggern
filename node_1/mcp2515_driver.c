@@ -12,10 +12,17 @@
 void mcp_init(){
 	SPI_MasterInit();
 	
+	mcp_reset();
+    
 	// set T0 to T2 with increasing priority, t0 =000, t1 = 010, t2=011	
 	mcp_bit_modify(MCP_TXB0CTRL, 0b00000011, 0x00); //t0
 	mcp_bit_modify(MCP_TXB1CTRL, 0b00000011, 0b00000010); //t1
 	mcp_bit_modify(MCP_TXB2CTRL, 0b00000011, 0b00000011); // t2
+    
+    //set the MCP_CNF, this has to correspond to the baudrate. And one should not be stupid enough to forget to set them here, which we somehow managed for a while. 
+    mcp_bit_modify(MCP_CNF3, 0x07, 0b00000111);
+    mcp_bit_modify(MCP_CNF2, 0xFF, 0b10101100);
+    mcp_bit_modify(MCP_CNF1, 0xFF, 0b00000011); 
 	
 	//set interrupt for all buffers
 	mcp_bit_modify(MCP_CANINTE, 0b11100000, 0b01000000);
@@ -102,7 +109,7 @@ void mcp_set_loopback_mode(){
 	 //can_ctrl_reg 0xfh, REQP (bit 7-5 of can ctrl reg, 5 is lsb)
 	//uint8_t can_ctrl_reg_addr = 0x0f;
 	
-	printf("in setting loopback\r\n");
+	
 	
 	mcp_bit_modify(MCP_CANCTRL, 0b11100000, 0b01000000); //Set loopback mode
 	
@@ -111,19 +118,19 @@ void mcp_set_loopback_mode(){
 	uint8_t canstat =  mcp_read(MCP_CANSTAT);
 	uint8_t opmode = canstat >> 5; // the bitshift is in order to only see the uppermost three bits
 
-	if(opmode == 2){ // 3 corresponds to looback command, 0b010
-		printf("sucessfully set loopback mode\r\n");
-	}
-	else{
+	if(opmode != 2){ // 3 corresponds to looback command, 0b010
 		printf("setting loopback mode failed\r\n");
 	}
+    else{
+        printf("can loopback mode entered\r\n");
+    }
 } 
 
 void mcp_set_normal_mode(){
 	 //can_ctrl_reg 0xfh, REQP (bit 7-5 of can ctrl reg, 5 is lsb)
 	//uint8_t can_ctrl_reg_addr = 0x0f;
 	
-	printf("in setting normal mode\r\n");
+	printf("can normal mode requested\r\n");
 	
 	mcp_bit_modify(MCP_CANCTRL, 0b11100000, 0b00000000); //Set normal mode (0 is normal mode)
 	
@@ -132,10 +139,10 @@ void mcp_set_normal_mode(){
 	uint8_t canstat =  mcp_read(MCP_CANSTAT);
 	uint8_t opmode = canstat >> 5; // the bitshift is in order to only see the uppermost three bits
 
-	if(opmode == 0){ // 0 corresponds to normal mode
-		printf("sucessfully set CAN normal mode\r\n");
-	}
-	else{
+	if(opmode != 0){ // 0 corresponds to normal mode
 		printf("setting CAN normal mode failed\r\n");
-	}
+	}    
+    else{
+        printf("can normal mode entered\r\n");
+    }
 } 
