@@ -13,5 +13,6 @@
 void pwm_init();
 void pwm_set_angle(int deg);
 void pwm_test_a_few_angles();
+void pwm_set_joystick_converted_angle(int joystick_angle);
 
 #endif /* PWM_DRIVER_H_ */

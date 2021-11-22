@@ -5,6 +5,8 @@
 #include <time.h>
 #include "oled_driver.h"
 
+#include "adc_driver.h" // needed in the menu loop that responds to the joystick
+
 // content of example menu 
 // line 1
 // -> a, b, c, d
@@ -12,7 +14,11 @@
 // line 3
 // -> 1,2,3, 4
 
-char outer_menu[3][8] = {"line1", "line2","line3"};
+//each innermost menu-item has a corresponding identifying number. a->0, ... d->3, 1->4 ... 4->7  
+//NB: this is not respected by menu handler at the moment.
+
+//char outer_menu[3][8] = {"line1", "line2","line3"};
+char outer_menu[3][8] = {"play", "play","play yes"};
 char submenues[3][4][8] = {{"a","b","c","d"},{}, {"1","2","3","4"}};
 char current_menu[6][8];  // has to  be large enough to store all other submenues
 
@@ -29,6 +35,25 @@ void menu_oled_clear_screen(){
 	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 }*/
 
+// loop for handling the menu, needs to be called at regular intervals for the menu to function
+int menu_loop(){
+	if (adc_joystick_direction() == DOWN)
+	{
+		menu_go_down();
+	}
+	if (adc_joystick_direction() == UP){
+		menu_go_up();
+	}
+	if (button_read(0)){ //read right button 
+		if (menu_depth=0){
+			menu_go_in();
+		}
+		else{
+			return current_pos; // should be a more correct value that also takes into acccount submenu
+		}
+	}
+	return -1; 
+}
 
 // will write the current subemnu to the screen, and highlight the current selection 
 void oled_write_menu_to_screen(){
@@ -75,11 +100,6 @@ void update_current_menu(){
 }
 
 
-
-
-
-
-
 // should  have check to see if it is out of bounds
 void menu_go_down(){
 	current_pos = current_pos +1;
@@ -94,12 +114,9 @@ void menu_go_up(){
 
 // goes in one submenu
 void menu_go_in(){
-	if (menu_depth == 0)
-	{
+	if (menu_depth == 0){
 		menu_depth = 1;
-		
 		update_current_menu(); // will also call oled_write_menu_to_screen();
-
 	}
 	else {
 		printf("cannot go deeper than one submenu layer");

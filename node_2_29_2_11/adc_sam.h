@@ -12,7 +12,7 @@
 
 void adc_init();
 int adc_get_val();
-void adc_print_whether_ball_detected();
+void adc_print_whether_ball_detected(int threshold, int print_adc_val);
 
 
 #endif /* ADC_SAM_H_ */

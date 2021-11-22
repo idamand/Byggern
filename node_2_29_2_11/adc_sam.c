@@ -30,22 +30,33 @@ int adc_get_val(){
 	//printf("sample value is %4d\n\r", sample_value);
 	return sample_value; 
 }
-void adc_print_whether_ball_detected(){
-    printf("ball checking started\n\r");
+
+//need to be global
+int ball_count =0; // amount of times ball is passed the ir-sensor.
+int ball_in_front_of_ir_flag = 0;
+
+//must bee looped from outside of the function (that is, this function only does one single check.
+//threshold should be ish 1500
+void adc_print_whether_ball_detected(int threshold, int print_adc_val ){
 	
-	for (int i=0; i<900; i++)
-	{
-        if(adc_get_val()< 100){
-			printf("BALL DETECTED!"); 
-		
-		}
-        
-		printf("val %4d: \n\r", adc_get_val());
-        
-		//sysTickDelay2(1);
-		
+	int adc_val = adc_get_val();
+    if((adc_val < threshold) && ball_in_front_of_ir_flag == 0){ //1550 empiracally obtained // if < 1550 -> ball is blocking ir
+		printf("BALL DETECTED!"); 
+		ball_count += 1; 
+		ball_in_front_of_ir_flag = 1; 
+		printf(": %4d",ball_count);	
 	}
+	else{
+		if (adc_val > threshold)
+		{
+			ball_in_front_of_ir_flag = 0;	
+		}
+	}
+    if (print_adc_val)
+    {
+	    printf("val %4d: \n\r", adc_get_val());
+
+    }
     
 	
-	printf("ball checking finished\n\r");
 }

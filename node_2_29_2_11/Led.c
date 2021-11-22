@@ -12,7 +12,7 @@ void Led_init(){
     
     PIOA ->PIO_PER = PIO_PA19; // enable pin as output
     PIOA -> PIO_OER = PIO_PA19; // set as output
-    PIOA -> PIO_PUDR = PIO_PA19;
+    PIOA -> PIO_PUDR = PIO_PA19; // pull up disable
 }
 
 void Led_blink_once_quickly(){

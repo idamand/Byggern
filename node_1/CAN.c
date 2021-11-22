@@ -59,15 +59,15 @@ void CAN_send(struct CANmessage message, uint8_t buffer){ //Buffer type is 0bxxx
 	mcp_bit_modify(MCP_TXB0CTRL, 0b00001000, 0b00001000); // set txreq bit high (see flowchart page 17 mcp2525 for why this is necessary) 
 	//printf("txb0ctrl before rts is %4d\r\n", mcp_read(MCP_TXB0CTRL));
 	
-    printf("MLOA before RTS: %4d\r\n", mcp_read( MCP_TXB0CTRL) & (1<<5)  ); //should be 0, because this is cleared by setting txreq bit.
+    //printf("MLOA before RTS: %4d\r\n", mcp_read( MCP_TXB0CTRL) & (1<<5)  ); //should be 0, because this is cleared by setting txreq bit.
     
 	mcp_request_to_send(buffer); //Request to send to selected buffer
-	printf("can send waiting for interrupt\n");
+	//printf("can send waiting for interrupt\n");
     
 	//Add interrupt when message transmitted
 	uint8_t interrupt = mcp_read(MCP_CANINTF);
-	printf("canintf is %4d\r\n", interrupt);
-	printf("caninte is %4d\r\n", mcp_read(MCP_CANINTE));
+	//printf("canintf is %4d\r\n", interrupt);
+	//printf("caninte is %4d\r\n", mcp_read(MCP_CANINTE));
 	
 	if( mcp_read(MCP_TXB0CTRL) == 0){
 		printf("txb0ctrl.txreq was cleared after can transmission, sucessful can_send.\r\n");
@@ -84,7 +84,7 @@ void CAN_send(struct CANmessage message, uint8_t buffer){ //Buffer type is 0bxxx
         
 	}
     
-    printf("MLOA after RTS: %4d\r\n", mcp_read(MCP_TXB0CTRL)& (1<<5)  );
+    //printf("MLOA after RTS: %4d\r\n", mcp_read(MCP_TXB0CTRL)& (1<<5)  );
 	
 	//manually clear canintf to reset interrupt condition
 	mcp_write(MCP_CANINTF, 0x00); //NB: TODO: might be a good idea to remove if we want interrupts on this node

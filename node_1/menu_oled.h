@@ -21,7 +21,7 @@ void menu_go_down();
 void menu_go_up();
 void menu_go_in();
 void menu_go_out();
-
+int menu_loop(); //returns the value of selected item, if a menu item was selected, else it returns -1
 
 
 

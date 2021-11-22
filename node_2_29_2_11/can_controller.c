@@ -169,32 +169,6 @@ uint8_t can_send(CAN_MESSAGE* can_msg, uint8_t tx_mb_id)
  */
 uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
 {
-    /* this block is just garbage we added 
-	//Check that mailbox is ready
-	if(! (CAN0->CAN_MB[rx_mb_id].CAN_MSR & CAN_MSR_MRDY) ){
-		printf("can_msr evaluate false");
-	}
-	
-	printf("clearing can_msr"); 
-	//this should be done at the point where we handle interrupts in application
-	
-	//to clear register (not in original code) 
-	//CAN0 -> CAN_MB[rx_mb_id].CAN_MCR |=  CAN_MCR_MTCR; // mailbox transfer command
-	//CAN0 -> CAN_MB[rx_mb_id].CAN_MCR |=  CAN_MCR_MACR;  // abort request for mailbox
-	
-	//to force the register high
-	 // setting mot field in can mmr should set mrdy to 1 //p.1231 
-	 //can_mmr  CAN_MMR_MOT_MB_RX
-	 //CAN0 -> CAN_MB[rx_mb_id].
-	 //CAN0 -> CAN_MMR.
-	
-	if(! (CAN0->CAN_MB[rx_mb_id].CAN_MSR & CAN_MSR_MRDY )){
-		printf("can_msr evaluate false");
-	}
-	
-	//mrdy is cleared by writing mtcr or macr to can mcrx register.  
-	
-    */ 
 	if(CAN0->CAN_MB[rx_mb_id].CAN_MSR & CAN_MSR_MRDY)
 	{
 		//Get data from CAN mailbox

@@ -60,6 +60,9 @@ void oled_init() {
 	write_c(0xa4); // undo lighting up the entire screen, so that you can start writing stuff
 }
 
+void oled_turn_off(){
+	write_c(0xae); // display off
+}
 
 void oled_print_char(char* in_char){
 	/*if (in_char == 10){ //newline
